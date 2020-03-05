@@ -657,6 +657,9 @@ parseAMF(AMFObject *obj, AVal *av, int *depth)
 	      return 0;
 	    }
 	  break;
+	case 'A':
+	  prop.p_type = AMF_ECMA_ARRAY;
+	  break;
 	default:
 	  return -1;
 	}
@@ -688,6 +691,9 @@ parseAMF(AMFObject *obj, AVal *av, int *depth)
 	case 'O':
 	  prop.p_type = AMF_OBJECT;
 	  break;
+	case 'A':
+	  prop.p_type = AMF_ECMA_ARRAY;
+	  break;
 	default:
 	  return -1;
 	}
@@ -705,7 +711,7 @@ parseAMF(AMFObject *obj, AVal *av, int *depth)
 	}
     }
   AMF_AddProp(obj, &prop);
-  if (prop.p_type == AMF_OBJECT)
+  if (prop.p_type == AMF_OBJECT || prop.p_type == AMF_ECMA_ARRAY)
     (*depth)++;
   return 0;
 }
