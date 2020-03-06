@@ -253,11 +253,12 @@ DHInit(int nKeyBits)
   if (!dh)
     goto failed;
 
-  MP_t p, q, g;
+  const MP_t p, q, g;
   DH_get0_pqg(dh, &p, &q, &g);
-  MP_new(g);
+  MP_t new_g;
+  MP_new(new_g);
 
-  if (!g)
+  if (!new_g)
     goto failed;
 
   MP_gethex(p, P1024, res);	/* prime P1024, see dhgroups.h */
@@ -266,9 +267,9 @@ DHInit(int nKeyBits)
       goto failed;
     }
 
-  MP_set_w(g, 2);	/* base 2 */
-
-  DH_set0_pqg(dh, p, q, g);
+  MP_set_w(new_g, 2);	/* base 2 */
+  
+  DH_set0_pqg(dh, NULL, NULL, new_g);
 
   DH_set_length(dh, nKeyBits);
   return dh;
