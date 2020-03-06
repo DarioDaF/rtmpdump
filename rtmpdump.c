@@ -67,6 +67,8 @@ InitSockets()
 #endif
 }
 
+#define CleanupSockets() WSACleanup()
+/*
 inline void
 CleanupSockets()
 {
@@ -74,6 +76,7 @@ CleanupSockets()
   WSACleanup();
 #endif
 }
+*/
 
 #ifdef _DEBUG
 uint32_t debugTS = 0;
@@ -1408,7 +1411,7 @@ clean:
     fclose(file);
 
   CleanupSockets();
-
+  
 #ifdef _DEBUG
   if (netstackdump != 0)
     fclose(netstackdump);

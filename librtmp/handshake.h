@@ -69,9 +69,11 @@ typedef struct arcfour_ctx*	RC4_handle;
 #if OPENSSL_VERSION_NUMBER < 0x0090800 || !defined(SHA256_DIGEST_LENGTH)
 #error Your OpenSSL is too old, need 0.9.8 or newer with SHA256
 #endif
-#define HMAC_setup(ctx, key, len)	HMAC_CTX_init(&ctx); HMAC_Init_ex(&ctx, key, len, EVP_sha256(), 0)
-#define HMAC_crunch(ctx, buf, len)	HMAC_Update(&ctx, buf, len)
-#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(&ctx, dig, &dlen); HMAC_CTX_cleanup(&ctx)
+// Redefine CTX to be the pointer
+#define HMAC_CTX struct hmac_ctx_st*
+#define HMAC_setup(ctx, key, len)	ctx = HMAC_CTX_new(); HMAC_Init_ex(ctx, key, len, EVP_sha256(), 0)
+#define HMAC_crunch(ctx, buf, len)	HMAC_Update(ctx, buf, len)
+#define HMAC_finish(ctx, dig, dlen)	HMAC_Final(ctx, dig, &dlen); HMAC_CTX_free(ctx)
 
 typedef RC4_KEY *	RC4_handle;
 #define RC4_alloc(h)	*h = malloc(sizeof(RC4_KEY))
